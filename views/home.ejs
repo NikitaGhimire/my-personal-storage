@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Welcome to your personal storage system</h1>
+    <% if (userId) { %>
+        <a href="/upload"><button>Upload File</button></a>
+        <a href="/logout"><button>Logout</button></a>
+        <a href="/create-folder"> <button>Create Folder</button></a>
+        
+      <% } else { %>
+        <a href="/login"><button>Login</button></a>
+        <a href="/create-user"><button>Create User</button></a>
+      <% } %>
+      
+      
+</body>
+</html>
