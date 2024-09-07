@@ -3,7 +3,6 @@ const authRouter = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
-const upload = require("../config/upload");
 
 //Render a create user form page
 authRouter.get("/create-user", (req, res) => {
@@ -43,8 +42,6 @@ authRouter.post("/create-user", async (req, res) => {
 authRouter.get("/login", (req, res) => {
   res.render("login");
 });
-
-module.exports = authRouter;
 
 //post handle login logic
 authRouter.post("/login", async (req, res) => {
@@ -99,104 +96,5 @@ function requireLogin(req, res, next) {
   }
   next();
 }
-// Render the upload form with folders
-authRouter.get("/upload", requireLogin, async (req, res) => {
-  try {
-    const folders = await prisma.folder.findMany({
-      where: { userId: req.session.userId },
-    });
-    res.render("upload", { folders: folders });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching folders");
-  }
-});
 
-//handle file uploads
-authRouter.post(
-  "/upload",
-  requireLogin,
-  upload.single("file"),
-  async (req, res) => {
-    try {
-      const file = req.file;
-
-      if (!file) {
-        return res.status(400).send("No file uploaded.");
-      }
-
-      // Optionally, store file information in the database, including the user who uploaded it
-      await prisma.file.create({
-        data: {
-          userId: req.session.userId,
-          filename: file.filename,
-          filePath: file.path,
-          mimeType: file.mimetype,
-        },
-      });
-
-      res.send("File uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error uploading file");
-    }
-  }
-);
-
-// Render create folder form
-authRouter.get("/create-folder", requireLogin, (req, res) => {
-  res.render("createFolder"); // Make sure you have 'createFolder.ejs' in your views folder
-});
-
-// Handle folder creation
-authRouter.post("/create-folder", requireLogin, async (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).send("Folder name is required");
-  }
-
-  try {
-    await prisma.folder.create({
-      data: {
-        name: name,
-        userId: req.session.userId,
-      },
-    });
-    res.redirect("/"); // Redirect to a list of folders or home page
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error creating folder");
-  }
-});
-
-authRouter.post(
-  "/upload",
-  requireLogin,
-  upload.single("file"),
-  async (req, res) => {
-    try {
-      const file = req.file;
-      const { folderId } = req.body;
-
-      if (!file) {
-        return res.status(400).send("No file uploaded.");
-      }
-
-      await prisma.file.create({
-        data: {
-          userId: req.session.userId,
-          filename: file.filename,
-          filePath: file.path,
-          mimeType: file.mimetype,
-          folderId: folderId || null, // Associate file with a folder if provided
-        },
-      });
-
-      res.send("File uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error uploading file");
-    }
-  }
-);
+module.exports = { authRouter, requireLogin };

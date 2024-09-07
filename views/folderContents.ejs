@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= folder.name %> - Folder Contents</title>
+</head>
+<body>
+  <h1>Files in <%= folder.name %></h1>
+
+  <ul>
+    <% if (files.length === 0) { %>
+      <p>No files in this folder.</p>
+      
+    <% } else { %>
+      <% files.forEach(file => { %>
+        <li>
+          <!-- File name as a clickable link -->
+          <a href="/file/<%= file.id %>"><%= file.filename %></a>
+
+          <!-- Delete File Form -->
+          <form action="/file/<%= file.id %>/delete" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+          <!-- Download button -->
+          <a href="/file/<%= file.id %>/download"><button>Download</button></a>
+        </li>
+      <% }) %>
+    <% } %>
+  </ul>
+  <a href="/upload"><button>Upload File</button></a>
+  <a href="/">Back to Home</a>
+</body>
+</html>

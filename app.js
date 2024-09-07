@@ -1,7 +1,9 @@
 const express = require("express");
 const homeRouter = require("./routes/homeRoute");
-const authRouter = require("./routes/auth");
+const { authRouter } = require("./routes/auth");
 const session = require("express-session");
+const folderRouter = require("./routes/folderRoute");
+const fileRouter = require("./routes/fileRoute");
 const app = express();
 
 //set the view  engine to ejs
@@ -27,6 +29,8 @@ app.use((req, res, next) => {
 //using the route
 app.use("/", homeRouter);
 app.use("/", authRouter);
+app.use("/", folderRouter);
+app.use("/", fileRouter);
 
 //start the server
 const PORT = 3000;

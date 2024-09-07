@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Files</title>
+</head>
+<body>
+    <h1>All Files</h1>
+    <a href="/">Back to Home</a>
+    <a href="/upload"><button>Upload File</button></a>
+
+    <ul>
+        <% files.forEach(file => { %>
+            <li>
+
+                <%= file.filename %>
+                <%= file.folder ? file.folder.name : 'No Folder' %>
+                
+                <!-- Display file details -->
+                <a href="<%= file.url %>" download><%= file.name %></a>
+
+                <!-- Download button -->
+                <a href="/file/<%= file.id %>/download"><button>Download</button></a>
+                <!-- Optionally include a delete button -->
+                <form action="/file/<%= file.id %>/delete" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>

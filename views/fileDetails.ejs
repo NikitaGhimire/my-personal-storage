@@ -1,0 +1,18 @@
+<!-- views/fileDetails.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Details</title>
+</head>
+<body>
+    <h1>File Details</h1>
+    <p><strong>Filename:</strong> <%= file.filename %></p>
+    <p><strong>File Path:</strong> <%= file.filePath %></p>
+    <p><strong>MIME Type:</strong> <%= file.mimeType %></p>
+    
+    <!-- Download button -->
+    <a href="/file/<%= file.id %>/download"><button>Download</button></a>
+</body>
+</html>

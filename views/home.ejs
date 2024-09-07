@@ -9,14 +9,34 @@
     <h1>Welcome to your personal storage system</h1>
     <% if (userId) { %>
         <a href="/upload"><button>Upload File</button></a>
-        <a href="/logout"><button>Logout</button></a>
         <a href="/create-folder"> <button>Create Folder</button></a>
+        <a href="/file/all"><button>View All Files</button></a>
+        <a href="/logout"><button>Logout</button></a>
+
+        <h2>Your Folders</h2>
+        <ul>
+            <% folders.forEach(folder => { %>
+                <li>
+                  <!-- Make folder name clickable -->
+              <a href="/folder/<%= folder.id %>"><%= folder.name %></a>
+    
+                  <!-- Edit and Delete buttons -->
+                  <form action="/folder/<%= folder.id %>/edit" method="POST" style="display:inline;">
+                    <input type="text" name="newFolderName" placeholder="Rename folder">
+                    <button type="submit">Edit</button>
+                  </form>
+    
+                  <form action="/folder/<%= folder.id %>/delete" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                  </form>
+                </li>
+              <% }) %>
+            </ul>
         
       <% } else { %>
         <a href="/login"><button>Login</button></a>
         <a href="/create-user"><button>Create User</button></a>
       <% } %>
-      
-      
+        
 </body>
 </html>
