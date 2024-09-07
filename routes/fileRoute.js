@@ -54,28 +54,6 @@ fileRouter.post(
   }
 );
 
-// // Display file details
-// fileRouter.get("/file/:fileId", requireLogin, async (req, res) => {
-//   const { fileId } = req.params;
-//   console.log("Fetching details for fileId:", fileId); // Debugging line
-
-//   try {
-//     const file = await prisma.file.findUnique({
-//       where: { id: parseInt(fileId) },
-//     });
-
-//     if (!file) {
-//       console.log("File not found"); // Debugging line
-//       return res.status(404).send("File not found");
-//     }
-
-//     res.render("fileDetails", { file });
-//   } catch (error) {
-//     console.error("Error fetching file details:", error);
-//     res.status(500).send("Error fetching file details");
-//   }
-// });
-
 // Handle file download
 fileRouter.get("/file/:fileId/download", requireLogin, async (req, res) => {
   const { fileId } = req.params;
@@ -150,6 +128,28 @@ fileRouter.get("/file/all", requireLogin, async (req, res) => {
   } catch (error) {
     console.error("Error fetching files:", error);
     res.status(500).send("Error fetching files");
+  }
+});
+
+// Display file details
+fileRouter.get("/file/:fileId", requireLogin, async (req, res) => {
+  const { fileId } = req.params;
+  console.log("Fetching details for fileId:", fileId); // Debugging line
+
+  try {
+    const file = await prisma.file.findUnique({
+      where: { id: parseInt(fileId) },
+    });
+
+    if (!file) {
+      console.log("File not found"); // Debugging line
+      return res.status(404).send("File not found");
+    }
+
+    res.render("fileDetails", { file });
+  } catch (error) {
+    console.error("Error fetching file details:", error);
+    res.status(500).send("Error fetching file details");
   }
 });
 

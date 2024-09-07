@@ -14,5 +14,8 @@
     
     <!-- Download button -->
     <a href="/file/<%= file.id %>/download"><button>Download</button></a>
+    <!-- Optionally include a delete button -->
+    <form action="/file/<%= file.id %>/delete" method="POST" style="display:inline;">
+        <button type="submit">Delete</button>
 </body>
 </html>
