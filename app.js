@@ -5,11 +5,13 @@ const session = require("express-session");
 const folderRouter = require("./routes/folderRoute");
 const fileRouter = require("./routes/fileRoute");
 const app = express();
+require("dotenv").config();
 
 //set the view  engine to ejs
 app.set("view engine", "ejs");
 
 //middleware to parse JSON
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -23,6 +25,11 @@ app.use(
 //displaying logged in user status
 app.use((req, res, next) => {
   res.locals.userId = req.session.userId || null;
+  next();
+});
+// Middleware to remove or adjust the Permissions-Policy header
+app.use((req, res, next) => {
+  res.removeHeader("Permissions-Policy");
   next();
 });
 

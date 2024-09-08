@@ -24,13 +24,14 @@ model User {
 model File {
   id        Int      @id @default(autoincrement())
   filename  String
-  filePath  String
+  url       String?
   mimeType  String
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   folderId  Int?
   folder    Folder?  @relation(fields: [folderId], references: [id])
+  publicId  String? //making this field optional by adding a ?
 }
 
 model Folder {
@@ -39,4 +40,5 @@ model Folder {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   files     File[]
+  createdAt DateTime @default(now())
 }
