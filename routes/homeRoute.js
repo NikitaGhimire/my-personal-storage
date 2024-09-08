@@ -10,7 +10,7 @@ homeRouter.get("/", async (req, res) => {
       folders: [],
       userId: null,
       sharedFolders: [],
-      username: user.email || null,
+      username: null,
     });
   }
 
