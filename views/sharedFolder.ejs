@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared folders</title>
+</head>
+<body>
+    <h2>Shared Folders</h2>
+        <ul>
+          <% if (sharedFolders && sharedFolders.length > 0) { %>
+            <% sharedFolders.forEach(item => { %>
+                <li>
+                    <a href="/folder/<%= item.folder.id %>"><%= item.folder.name %></a>
+                </li>
+            <% }) %>
+        <% } else { %>
+            <li>No shared folders</li>
+        <% } %>
+        </ul>
+        
+    <a href="/">Back to home</a>
+</body>
+</html>

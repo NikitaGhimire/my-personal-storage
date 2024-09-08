@@ -97,4 +97,142 @@ folderRouter.get("/folder/:folderId", requireLogin, async (req, res) => {
   }
 });
 
+// Route to render a form for sharing a folder
+folderRouter.get("/folder/:folderId/share", async (req, res) => {
+  try {
+    // Fetch the folder to be shared
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id: parseInt(req.params.folderId),
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).send("Folder not found");
+    }
+
+    // Fetch all users except the current user (optional)
+    const users = await prisma.user.findMany({
+      where: {
+        NOT: {
+          id: req.session.userId, // Exclude the current user from the list
+        },
+      },
+    });
+    // Render a form to share the folder (you need to create this form in your views)
+    res.render("shareFolderForm", { folder, users });
+  } catch (error) {
+    console.error("Error fetching folder:", error);
+    res.status(500).send("Error fetching folder");
+  }
+});
+
+// Route to handle the form submission and share the folder
+folderRouter.post("/folder/:folderId/share", async (req, res) => {
+  const { userIdToShareWith } = req.body; // user ID of the person to share with
+
+  try {
+    // Check if the folder exists
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id: parseInt(req.params.folderId),
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).send("Folder not found");
+    }
+
+    // Create a new share record
+    await prisma.share.create({
+      data: {
+        folderId: folder.id,
+        userId: parseInt(userIdToShareWith),
+        // user is implied from userIdToShareWith, no need to explicitly specify
+      },
+    });
+
+    res.redirect("/"); // Redirect to homepage or wherever appropriate
+  } catch (error) {
+    console.error("Error sharing folder:", error);
+    res.status(500).send("Error sharing folder");
+  }
+});
+// Route to fetch and display shared folders
+folderRouter.get("/shared-folders", async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect("/login");
+  }
+
+  try {
+    // Fetch the shared folders for the logged-in user
+    const sharedFolders = await prisma.share.findMany({
+      where: {
+        userId: req.session.userId,
+      },
+      include: {
+        folder: true, // Include the folder details
+      },
+    });
+
+    res.render("sharedFolder", {
+      folders: null, // You might want to fetch user folders as well if needed
+      userId: req.session.userId,
+      sharedFolders,
+    });
+  } catch (error) {
+    console.error("Error retrieving shared folders:", error);
+    res.status(500).send("Error retrieving shared folders");
+  }
+});
+
+// Route to render a form for sharing a folder
+folderRouter.get("/folder/:folderId/share", async (req, res) => {
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id: parseInt(req.params.folderId),
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).send("Folder not found");
+    }
+
+    res.render("shareFolderForm", { folder });
+  } catch (error) {
+    console.error("Error fetching folder:", error);
+    res.status(500).send("Error fetching folder");
+  }
+});
+
+// Route to handle the form submission and share the folder
+folderRouter.post("/folder/:folderId/share", async (req, res) => {
+  const { userIdToShareWith } = req.body;
+
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id: parseInt(req.params.folderId),
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).send("Folder not found");
+    }
+
+    await prisma.share.create({
+      data: {
+        folderId: folder.id,
+        userId: parseInt(userIdToShareWith),
+      },
+    });
+
+    res.redirect("/"); // Redirect to homepage or wherever appropriate
+  } catch (error) {
+    console.error("Error sharing folder:", error);
+    res.status(500).send("Error sharing folder");
+  }
+});
+
 module.exports = folderRouter;

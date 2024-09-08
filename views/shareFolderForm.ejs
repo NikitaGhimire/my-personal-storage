@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share folder</title>
+</head>
+<body>
+    <h1>Share Folder: <%= folder.name %></h1>
+    <form action="/folder/<%= folder.id %>/share" method="POST">
+        <label for="user">Share with:</label>
+        <select name="userIdToShareWith" id="user">
+            <% users.forEach(user => { %>
+                <option value="<%= user.id %>"><%= user.email %></option>
+            <% }) %>
+        </select>
+        <button type="submit">Share</button>
+    </form>
+
+    <a href="/">Back to Home</a>
+      
+</body>
+</html>

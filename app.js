@@ -6,8 +6,10 @@ const folderRouter = require("./routes/folderRoute");
 const fileRouter = require("./routes/fileRoute");
 const app = express();
 require("dotenv").config();
+const path = require("path");
 
 //set the view  engine to ejs
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 //middleware to parse JSON

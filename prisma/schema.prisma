@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
   files File[]
   folders Folder[]
+  shares Share[]
 }
 model File {
   id        Int      @id @default(autoincrement())
@@ -40,5 +41,15 @@ model Folder {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   files     File[]
+  createdAt DateTime @default(now())
+  sharedWith Share[]
+}
+
+model Share {
+  id        Int     @id @default(autoincrement())
+  folderId  Int
+  folder    Folder  @relation(fields: [folderId], references: [id])
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }

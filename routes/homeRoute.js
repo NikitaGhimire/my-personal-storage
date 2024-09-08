@@ -6,11 +6,14 @@ const prisma = new PrismaClient();
 // Define a home route
 homeRouter.get("/", async (req, res) => {
   if (!req.session.userId) {
-    return res.render("home", { folders: null, userId: null });
+    return res.render("home", {
+      folders: [],
+      userId: null,
+      sharedFolders: [],
+    });
   }
 
   try {
-    console.log("Fetching folders for user ID:", req.session.userId); // Debugging line
     // Fetch the folders for the logged-in user
     const folders = await prisma.folder.findMany({
       where: {
@@ -20,10 +23,23 @@ homeRouter.get("/", async (req, res) => {
         files: true, // Also include the files in each folder
       },
     });
-    console.log("Folders retrieved:", folders); // Debugging line
+
+    // Fetch the shared folders for the logged-in user
+    const sharedFolders = await prisma.share.findMany({
+      where: {
+        userId: req.session.userId,
+      },
+      include: {
+        folder: true, // Include the folder details
+      },
+    });
 
     // Pass the folders to the template
-    res.render("home", { folders, userId: req.session.userId });
+    res.render("home", {
+      folders: folders || [],
+      userId: req.session.userId,
+      sharedFolders: sharedFolders || [],
+    });
   } catch (error) {
     console.error("Error retrieving folders:", error);
     res.status(500).send("Error retrieving folders");
