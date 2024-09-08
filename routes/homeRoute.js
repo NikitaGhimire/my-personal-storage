@@ -10,10 +10,18 @@ homeRouter.get("/", async (req, res) => {
       folders: [],
       userId: null,
       sharedFolders: [],
+      username: user.email || null,
     });
   }
 
   try {
+    // Fetch the user details
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.session.userId,
+      },
+    });
+
     // Fetch the folders for the logged-in user
     const folders = await prisma.folder.findMany({
       where: {
@@ -39,6 +47,7 @@ homeRouter.get("/", async (req, res) => {
       folders: folders || [],
       userId: req.session.userId,
       sharedFolders: sharedFolders || [],
+      username: user.email,
     });
   } catch (error) {
     console.error("Error retrieving folders:", error);

@@ -172,6 +172,7 @@ folderRouter.get("/shared-folders", async (req, res) => {
       },
       include: {
         folder: true, // Include the folder details
+        user: true, // Include user details (who shared the folder)
       },
     });
 

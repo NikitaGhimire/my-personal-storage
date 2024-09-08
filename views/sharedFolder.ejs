@@ -12,6 +12,8 @@
             <% sharedFolders.forEach(item => { %>
                 <li>
                     <a href="/folder/<%= item.folder.id %>"><%= item.folder.name %></a>
+                    <!-- Display who shared the folder -->
+              <span>(Shared by: <%= item.user.email %>)</span>
                 </li>
             <% }) %>
         <% } else { %>

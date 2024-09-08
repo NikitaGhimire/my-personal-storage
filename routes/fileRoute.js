@@ -63,8 +63,8 @@ fileRouter.post(
           // No need to store filePath for Cloudinary files
         },
       });
-
-      res.send("File uploaded successfully to Cloudinary!");
+      console.log("Uploading file complete, back to home");
+      res.redirect("/");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error uploading file to Cloudinary");
